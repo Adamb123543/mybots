@@ -7,7 +7,7 @@ p.setAdditionalSearchPath(pybullet_data.getDataPath())
 #p.configureDebugVisualizer(p.COV_ENABLE_GUI,0)
 p.setGravity(0,0,-9.8) #sets gravity
 planeId = p.loadURDF("plane.urdf") #adds floor plane
-p.loadSDF("boxes.sdf")
+p.loadSDF("world.sdf")
 
 for i in range(100000):
     print(i)
