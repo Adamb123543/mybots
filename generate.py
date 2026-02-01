@@ -13,7 +13,7 @@ def Create_World():
 
 def Create_Robot():
     pyrosim.Start_URDF("body.urdf")
-    pyrosim.Send_Cube(name="body", pos=[x, y, z], size=[length, width, height])
+    pyrosim.Send_Cube("Torso", [x, y, z], [length, width, height])
     pyrosim.End()
 
 
