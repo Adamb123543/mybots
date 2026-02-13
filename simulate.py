@@ -3,7 +3,7 @@ import time
 import pybullet_data
 import pyrosim.pyrosim as pyrosim
 import numpy as np
-
+import random
 
 physicsClient = p.connect(p.GUI)
 p.setAdditionalSearchPath(pybullet_data.getDataPath())
@@ -16,7 +16,7 @@ p.loadSDF("world.sdf")
 pyrosim.Prepare_To_Simulate(robotId) #additional setup for sensors with Pyrosim
 backLegSensorValues = np.zeros(1000) #for storing sensor data
 frontLegSensorValues = np.zeros(1000) #for storing sensor data
-
+torque = 25
 for i in range(1000):
     #print(i)
     p.stepSimulation()
@@ -30,9 +30,9 @@ for i in range(1000):
 
         controlMode=p.POSITION_CONTROL,
 
-        targetPosition=-np.pi/6.0,
+        targetPosition=random.random()*np.pi - np.pi/2,
 
-        maxForce=500)
+        maxForce=torque)
 
     pyrosim.Set_Motor_For_Joint(
 
@@ -42,9 +42,9 @@ for i in range(1000):
 
         controlMode=p.POSITION_CONTROL,
 
-        targetPosition=np.pi / 6.0,
+        targetPosition=random.random()*np.pi - np.pi/2,
 
-        maxForce=500)
+        maxForce=torque)
     time.sleep(1/60)
 #np.save("backLegSensorValues.npy",backLegSensorValues)
 p.disconnect()
