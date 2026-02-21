@@ -1,6 +1,6 @@
 from simulation import SIMULATION
 
-'''
+
 import pybullet as p
 import time
 import pybullet_data
@@ -8,7 +8,13 @@ import pyrosim.pyrosim as pyrosim
 import numpy as np
 import constants as c
 import random
+from simulation import SIMULATION
 
+simulation = SIMULATION()
+
+simulation.Run()
+
+'''
 physicsClient = p.connect(p.GUI)
 p.setAdditionalSearchPath(pybullet_data.getDataPath())
 #p.configureDebugVisualizer(p.COV_ENABLE_GUI,0)
@@ -18,6 +24,8 @@ robotId = p.loadURDF("body.urdf") #adds floor plane
 
 p.loadSDF("world.sdf")
 pyrosim.Prepare_To_Simulate(robotId) #additional setup for sensors with Pyrosim
+'''
+'''
 backLegSensorValues = np.zeros(c.simulationCycles) #for storing sensor data
 frontLegSensorValues = np.zeros(c.simulationCycles) #for storing sensor data
 
@@ -32,7 +40,7 @@ for i in range(c.simulationCycles):
     frontLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("FrontLeg") #touch sensors
     pyrosim.Set_Motor_For_Joint(
 
-        bodyIndex=robotId,
+        bodyIndex=self.robotId,
 
         jointName=b'Torso_BackLeg',
 
@@ -44,7 +52,7 @@ for i in range(c.simulationCycles):
 
     pyrosim.Set_Motor_For_Joint(
 
-        bodyIndex=robotId,
+        bodyIndex=self.robotId,
 
         jointName=b'Torso_FrontLeg',
 
@@ -61,6 +69,8 @@ np.save("data/frontLegSensorValues.npy",frontLegSensorValues)
 
 print(backLegSensorValues)
 
-'''
+
 
 simulation = SIMULATION()
+
+'''
