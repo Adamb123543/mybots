@@ -6,6 +6,10 @@ import pybullet_data
 import pyrosim.pyrosim as pyrosim
 import numpy as np
 import constants as c
+from pyrosim.neuralNetwork import NEURAL_NETWORK
+
+
+
 
 class SIMULATION:
     def __init__(self):
@@ -19,35 +23,11 @@ class SIMULATION:
 
     def Run(self):
         for i in range(c.simulationCycles):
-            print(i)
+            #print(i)
             self.robot.Sense(i)
+            self.robot.Think()
+            self.robot.Act(i)
             p.stepSimulation()
-            #c.backLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("BackLeg")  # touch sensors
-            #c.frontLegSensorValues[i] = pyrosim.Get_Touch_Sensor_Value_For_Link("FrontLeg")  # touch sensors
-            pyrosim.Set_Motor_For_Joint(
-
-                bodyIndex=self.robot.robotId,
-
-                jointName=b'Torso_BackLeg',
-
-                controlMode=p.POSITION_CONTROL,
-
-                targetPosition=c.BackLegTargetAngles[i],
-
-                maxForce=c.torque)
-
-            pyrosim.Set_Motor_For_Joint(
-
-                bodyIndex=self.robot.robotId,
-
-                jointName=b'Torso_FrontLeg',
-
-                controlMode=p.POSITION_CONTROL,
-
-                targetPosition=c.FrontLegTargetAngles[i],
-
-                maxForce=c.torque)
-
             time.sleep(c.cycleTimeSleep)
 
     def __del__(self):

@@ -2,16 +2,22 @@ import pybullet as p
 import pyrosim.pyrosim as pyrosim
 from sensor import SENSOR
 import constants as c
-from pyrosim.pyrosim import Prepare_To_Simulate
+from motor import MOTOR
+import pyrosim.pyrosim as pyrosim
+from pyrosim.neuralNetwork import NEURAL_NETWORK
+
 
 
 class ROBOT:
+
     def __init__(self):
         self.motors = {}
 
         self.robotId = p.loadURDF("body.urdf")  # adds floor plane
         pyrosim.Prepare_To_Simulate(self.robotId)  # additional setup for sensors with Pyrosim
         self.Prepare_To_Sense()
+        self.Prepare_To_Act()
+        self.nn = NEURAL_NETWORK("brain.nndf")
 
     def Prepare_To_Sense(self):
         self.sensors = {}
@@ -20,3 +26,15 @@ class ROBOT:
     def Sense(self,t):
         for LinkName in self.sensors:
             self.sensors[LinkName].Get_Value(t)
+
+    def Prepare_To_Act(self):
+        self.joints = {}
+        for jointName in pyrosim.jointNamesToIndices:
+            self.joints[jointName] = MOTOR(jointName)
+
+    def Act(self,t):
+        for jointName in self.joints:
+            self.joints[jointName].Set_Value(self,t)
+
+    def Think(self):
+        self.nn.Print()
