@@ -37,4 +37,5 @@ class ROBOT:
             self.joints[jointName].Set_Value(self,t)
 
     def Think(self):
+        self.nn.Update()
         self.nn.Print()
