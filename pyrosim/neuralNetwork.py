@@ -33,6 +33,8 @@ class NEURAL_NETWORK:
             #print(neuron.Get_Name())
             if neuron.Is_Sensor_Neuron():
                 neuron.Update_Sensor_Neuron()
+            else:
+                self.neurons[key].Update_Hidden_Or_Motor_Neuron()
 
 # ---------------- Private methods --------------------------------------
 
