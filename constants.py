@@ -8,11 +8,11 @@ BackLegAmplitude = np.pi/8
 BackLegFrequency = 5
 BackLegPhaseOffset = 0
 
-torque = 25
+torque = 100
 
 gravity = -9.8
 
-simulationCycles = 1000
+simulationCycles = 400
 
 cycleTimeSleep = 1/60
 
