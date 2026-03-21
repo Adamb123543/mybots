@@ -6,5 +6,5 @@ class HILL_CLIMBER():
         self.parent = SOLUTION()
 
     def Evolve(self):
-        pass
+        self.parent.Evaluate()
 
