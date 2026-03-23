@@ -1,13 +1,12 @@
 import os
 from hillclimber import *
 import constants
-
+import simulation
 
 
 hc = HILL_CLIMBER()
 
 hc.Evolve()
-
 
 #for i in range(5):
 #

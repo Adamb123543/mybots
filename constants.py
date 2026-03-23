@@ -22,6 +22,7 @@ BackLegTargetAngles = np.linspace(-np.pi, np.pi, simulationCycles)
 backLegSensorValues = np.zeros(simulationCycles) #for storing sensor data
 frontLegSensorValues = np.zeros(simulationCycles) #for storing sensor data
 
+numberOfGenerations = 10
 
 for i in range(simulationCycles):
     FrontLegTargetAngles[i] = FrontLegAmplitude*(-np.sin(FrontLegFrequency*FrontLegTargetAngles[i]+FrontLegPhaseOffset))

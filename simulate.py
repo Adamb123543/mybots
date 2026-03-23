@@ -9,7 +9,9 @@ import numpy as np
 import constants as c
 import random
 from simulation import SIMULATION
+import simulation
 
 simulation = SIMULATION()
 
 simulation.Run()
+simulation.Get_Fitness()
