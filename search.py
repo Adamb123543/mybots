@@ -1,17 +1,17 @@
 import os
-from hillclimber import *
+from parallelHillClimber import *
 import constants
 import simulation
 import time
 import constants as c
 
 
-hc = HILL_CLIMBER()
-hc.Show_Best()
+phc = PARALLEL_HILL_CLIMBER()
+phc.Show_Best()
 
-hc.Evolve()
+phc.Evolve()
 
-hc.Show_Best()
+phc.Show_Best()
 
 #for i in range(5):
 #
