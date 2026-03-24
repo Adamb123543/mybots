@@ -4,7 +4,7 @@ import os
 import pyrosim.pyrosim as pyrosim
 import numpy as np
 import random as random
-
+import sys
 
 length = 1
 width = 1
@@ -15,15 +15,18 @@ z = 0.5
 
 
 class SOLUTION():
-    def __init__(self):
+    def __init__(self, myID):
+        self.myID = myID
         self.weights = np.random.rand(3,2)
         self.weights = self.weights*2-1
+    def Set_ID(self, myID):
+        self.myID = myID
 
     def Evaluate(self, directOrGUI):
         self.Create_World()
         self.Create_Brain()
         self.Create_Body()
-        os.system("python simulate.py "  +  directOrGUI)
+        os.system("start /B python simulate.py " + directOrGUI)
         fitnessFile = open("fitness.txt", "r")
         self.fitness = float(fitnessFile.read())
         fitnessFile.close()
