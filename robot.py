@@ -5,19 +5,20 @@ import constants as c
 from motor import MOTOR
 import pyrosim.pyrosim as pyrosim
 from pyrosim.neuralNetwork import NEURAL_NETWORK
-
+import os
 
 
 class ROBOT:
 
-    def __init__(self):
+    def __init__(self, solutionID):
         self.motors = {}
 
         self.robotId = p.loadURDF("body.urdf")  # adds floor plane
         pyrosim.Prepare_To_Simulate(self.robotId)  # additional setup for sensors with Pyrosim
         self.Prepare_To_Sense()
         self.Prepare_To_Act()
-        self.nn = NEURAL_NETWORK("brain.nndf")
+        self.nn = NEURAL_NETWORK(f"brain{solutionID}.nndf")
+        os.system(f'del brain{self.robotId}.nndf')
 
     def Prepare_To_Sense(self):
         self.sensors = {}

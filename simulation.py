@@ -12,7 +12,7 @@ from pyrosim.neuralNetwork import NEURAL_NETWORK
 
 
 class SIMULATION:
-    def __init__(self, directOrGUI):
+    def __init__(self, directOrGUI, solutionID):
         if directOrGUI == 'DIRECT':
             self.physicsClient = p.connect(p.DIRECT)
         else:
@@ -22,7 +22,7 @@ class SIMULATION:
         p.setGravity(0, 0, c.gravity)  # sets gravity
 
         self.world = WORLD()
-        self.robot = ROBOT()
+        self.robot = ROBOT(solutionID)
 
     def Run(self, directOrGUI):
         for i in range(c.simulationCycles):
