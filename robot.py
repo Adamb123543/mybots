@@ -12,13 +12,13 @@ class ROBOT:
 
     def __init__(self, solutionID):
         self.motors = {}
-
+        self.solutionID = solutionID
         self.robotId = p.loadURDF("body.urdf")  # adds floor plane
         pyrosim.Prepare_To_Simulate(self.robotId)  # additional setup for sensors with Pyrosim
         self.Prepare_To_Sense()
         self.Prepare_To_Act()
         self.nn = NEURAL_NETWORK(f"brain{solutionID}.nndf")
-        os.system(f'del brain{self.robotId}.nndf')
+        os.system(f'del brain{self.solutionID}.nndf')
 
     def Prepare_To_Sense(self):
         self.sensors = {}
@@ -54,7 +54,12 @@ class ROBOT:
         positionofLinkZero = stateOfLinkZero[0]
         xCoordinateOfLinkZero = positionofLinkZero[0]
         print(xCoordinateOfLinkZero)
-        with open("fitness.txt", "w") as f:
-            f.write(str(xCoordinateOfLinkZero))
 
+        with open(f"tmp{self.solutionID}.txt", "w") as f:
+            f.write(str(xCoordinateOfLinkZero))
+        if os.path.exists(f"fitness{self.solutionID}.txt"):
+            os.remove(f"fitness{self.solutionID}.txt")
+        os.rename(f"tmp{self.solutionID}.txt", f"fitness{self.solutionID}.txt")
+
+        #os.system(f"rename tmp{self.solutionID}.txt fitness{self.solutionID}.txt")
         exit()

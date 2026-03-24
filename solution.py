@@ -4,6 +4,7 @@ import os
 import pyrosim.pyrosim as pyrosim
 import numpy as np
 import random as random
+import time
 import sys
 
 length = 1
@@ -23,15 +24,27 @@ class SOLUTION():
         self.myID = myID
 
     def Evaluate(self, directOrGUI):
+        self.Start_Simulation(directOrGUI)
+        self.Wait_For_Simulation_To_End()
+
+    def Start_Simulation(self, directOrGUI):
         self.Create_World()
         self.Create_Brain()
+        while not os.path.exists(f"brain{self.myID}.nndf"):
+            time.sleep(0.01)
         self.Create_Body()
         os.system(f"start /B python simulate.py {directOrGUI} {self.myID}")
-        fitnessFile = open("fitness.txt", "r")
+
+
+    def Wait_For_Simulation_To_End(self):
+        while not os.path.exists(f"fitness{str(self.myID)}.txt"):
+            time.sleep(0.01)
+        fitnessFile = open(f"fitness{str(self.myID)}.txt", "r")
         self.fitness = float(fitnessFile.read())
+        #print(self.fitness)
         fitnessFile.close()
-
-
+        if os.path.exists(f"fitness{self.myID}.txt"):
+            os.remove(f"fitness{self.myID}.txt")
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
