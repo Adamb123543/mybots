@@ -2,11 +2,16 @@ import os
 from hillclimber import *
 import constants
 import simulation
+import time
+import constants as c
 
 
 hc = HILL_CLIMBER()
+hc.Show_Best()
 
 hc.Evolve()
+
+hc.Show_Best()
 
 #for i in range(5):
 #

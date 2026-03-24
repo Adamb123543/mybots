@@ -1,5 +1,5 @@
 from simulation import SIMULATION
-
+import sys
 
 import pybullet as p
 import time
@@ -11,7 +11,9 @@ import random
 from simulation import SIMULATION
 import simulation
 
-simulation = SIMULATION()
+directOrGUI = sys.argv[1]
 
-simulation.Run()
+simulation = SIMULATION(directOrGUI)
+
+simulation.Run(directOrGUI)
 simulation.Get_Fitness()

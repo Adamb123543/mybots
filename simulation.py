@@ -12,8 +12,11 @@ from pyrosim.neuralNetwork import NEURAL_NETWORK
 
 
 class SIMULATION:
-    def __init__(self):
-        self.physicsClient = p.connect(p.DIRECT)
+    def __init__(self, directOrGUI):
+        if directOrGUI == 'DIRECT':
+            self.physicsClient = p.connect(p.DIRECT)
+        else:
+            self.physicsClient = p.connect(p.GUI)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         # p.configureDebugVisualizer(p.COV_ENABLE_GUI,0)
         p.setGravity(0, 0, c.gravity)  # sets gravity
@@ -21,14 +24,15 @@ class SIMULATION:
         self.world = WORLD()
         self.robot = ROBOT()
 
-    def Run(self):
+    def Run(self, directOrGUI):
         for i in range(c.simulationCycles):
             #print(i)
             self.robot.Sense(i)
             self.robot.Think()
             self.robot.Act(i)
             p.stepSimulation()
-            time.sleep(c.cycleTimeSleep)
+            if directOrGUI == 'GUI':
+                time.sleep(c.cycleTimeSleep)
 
     def __del__(self):
 
