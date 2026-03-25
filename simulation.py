@@ -13,6 +13,7 @@ from pyrosim.neuralNetwork import NEURAL_NETWORK
 
 class SIMULATION:
     def __init__(self, directOrGUI, solutionID):
+        self.directOrGUI = directOrGUI
         if directOrGUI == 'DIRECT':
             self.physicsClient = p.connect(p.DIRECT)
         else:
@@ -24,14 +25,14 @@ class SIMULATION:
         self.world = WORLD()
         self.robot = ROBOT(solutionID)
 
-    def Run(self, directOrGUI):
+    def Run(self):
         for i in range(c.simulationCycles):
             #print(i)
             self.robot.Sense(i)
             self.robot.Think()
             self.robot.Act(i)
             p.stepSimulation()
-            if directOrGUI == 'GUI':
+            if self.directOrGUI == 'GUI':
                 time.sleep(c.cycleTimeSleep)
 
     def __del__(self):

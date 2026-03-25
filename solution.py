@@ -28,7 +28,7 @@ class SOLUTION():
         self.Wait_For_Simulation_To_End()
 
     def Start_Simulation(self, directOrGUI):
-        self.Create_World()
+        #self.Create_World()
         self.Create_Brain()
         while not os.path.exists(f"brain{self.myID}.nndf"):
             time.sleep(0.01)
@@ -43,8 +43,7 @@ class SOLUTION():
         self.fitness = float(fitnessFile.read())
         #print(self.fitness)
         fitnessFile.close()
-        if os.path.exists(f"fitness{self.myID}.txt"):
-            os.remove(f"fitness{self.myID}.txt")
+        os.remove(f"fitness{self.myID}.txt")
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")

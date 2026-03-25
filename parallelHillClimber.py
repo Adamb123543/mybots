@@ -11,30 +11,29 @@ class PARALLEL_HILL_CLIMBER():
         for i in range(c.populationSize):
             self.parents[i] = SOLUTION(self.nextAvailableID)
             self.nextAvailableID += 1
-
+        self.parent = self.parents[0]
     def Evolve(self):
 
         #self.parent.Evaluate('DIRECT')
-        for parent in self.parents:
-            self.parents[parent].Start_Simulation("DIRECT")
-        for parent in self.parents:
-            self.parents[parent].Wait_For_Simulation_To_End()
+        self.Evaluate(self.parents)
         for currentGeneration in range(constants.numberOfGenerations):
             self.Evolve_For_One_Generation()
 
     def Evolve_For_One_Generation(self):
         self.Spawn()
         self.Mutate()
-        self.child.Evaluate('DIRECT')
+        self.Evaluate(self.children)
         self.Print()
         self.Select()
 
     def Spawn(self):
-        self.children = {}
-        for i in self.parents:
-            self.children[i] = copy.deepcopy(self.parents[i])
-            self.children[i].Set_ID(self.nextAvailableID)
-            self.nextAvailableID += 1
+        self.children = {}  # ADDED: empty dictionary
+        for i in self.parents:  # ADDED: iterate over each parent
+            self.children[i] = copy.deepcopy(self.parents[i])  # ADDED: deepcopy ith parent into ith child
+            self.children[i].Set_ID(self.nextAvailableID)  # ADDED: assign unique ID
+            self.nextAvailableID += 1  # ADDED: increment next available ID
+        #print(self.children)  # ADDED: temporarily print children
+        #exit()
 
 
 
@@ -44,14 +43,24 @@ class PARALLEL_HILL_CLIMBER():
 
 
     def Select(self):
+        #if self.parent.fitness > self.child.fitness:
+         #   self.parent = self.child
         for i in self.parents:
-            if self.children[i].fitness > self.parents[i].fitness:
+            if self.children[i].fitness < self.parents[i].fitness:
                 self.parents[i] = self.children[i]
-
     def Print(self):
+        print()
         for i in self.parents:
-            print(f"[{i}] parent: {self.parents[i].fitness:.4f}  child: {self.children[i].fitness:.4f}")
+            print(self.parents[i].fitness, self.children[i].fitness)
+        print()
 
     def Show_Best(self):
-        best = max(self.parents.values(), key=lambda s: s.fitness)
-        best.Evaluate("GUI")
+        #self.parent.Evaluate("GUI")
+        leastFit = min(self.parents, key = lambda i: self.parents[i].fitness)
+        self.parents[leastFit].Start_Simulation("GUI")
+
+    def Evaluate(self, solutions):
+        for i in solutions:
+            solutions[i].Start_Simulation("DIRECT")
+        for i in solutions:
+            solutions[i].Wait_For_Simulation_To_End()
