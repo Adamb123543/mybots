@@ -53,11 +53,11 @@ class SOLUTION():
 
     def Create_Body(self):
         pyrosim.Start_URDF("body.urdf")
-        pyrosim.Send_Cube("Torso", [1.5, 0, 1.5], [length, width, height])
-        pyrosim.Send_Joint(name="Torso_BackLeg", parent="Torso", child="BackLeg", type="revolute", position=[1, 0, 1])
-        pyrosim.Send_Cube("BackLeg", [-0.5, 0, -0.5], [length, width, height])
-        pyrosim.Send_Joint(name="Torso_FrontLeg", parent="Torso", child="FrontLeg", type="revolute", position=[2, 0, 1])
-        pyrosim.Send_Cube("FrontLeg", [0.5, 0, -0.5], [length, width, height])
+        pyrosim.Send_Cube("Torso", [0,0,1], [length, width, height])
+        pyrosim.Send_Joint(name="Torso_BackLeg", parent="Torso", child="BackLeg", type="revolute", position=[0, -0.5, 1])
+        pyrosim.Send_Cube("BackLeg", [0,-0.5,0], [0.2,1,0.2])
+        pyrosim.Send_Joint(name="Torso_FrontLeg", parent="Torso", child="FrontLeg", type="revolute", position=[0,0.5,1])
+        pyrosim.Send_Cube("FrontLeg", [0,0.5,0], [0.2,1,0.2])
 
         pyrosim.End()
 
