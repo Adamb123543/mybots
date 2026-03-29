@@ -1,4 +1,4 @@
-import constants
+import constants as c
 import numpy as np
 import os
 import pyrosim.pyrosim as pyrosim
@@ -33,7 +33,7 @@ class SOLUTION():
         while not os.path.exists(f"brain{self.myID}.nndf"):
             time.sleep(0.01)
         self.Create_Body()
-        os.system(f"start /B python simulate.py {directOrGUI} {self.myID}")
+        os.system(f"start /B python simulate.py {directOrGUI} {self.myID} 2>nul") #added 2>nul
 
 
     def Wait_For_Simulation_To_End(self):
@@ -73,14 +73,18 @@ class SOLUTION():
         # pyrosim.Send_Synapse(sourceNeuronName=1, targetNeuronName=4, weight=  -1.0)
         # pyrosim.Send_Synapse(sourceNeuronName=2, targetNeuronName=4, weight=1.0)
 
-        for currentRow in range(3):
-            for currentColumn in range(2):
+        for currentRow in range(c.numSensorNeurons):
+            for currentColumn in range(c.numMotorNeurons):
                 weight = random.random() * 2 - 1
-                pyrosim.Send_Synapse(sourceNeuronName=currentRow, targetNeuronName=currentColumn+3, weight=self.weights[currentRow][currentColumn])
+                pyrosim.Send_Synapse(sourceNeuronName=currentRow, targetNeuronName=currentColumn+c.numSensorNeurons, weight=self.weights[currentRow][currentColumn])
 
         pyrosim.End()
 
+
     def Mutate(self):
-        randomRow = random.randint(0,2)
-        randomColumn = random.randint(0,1)
+        #randomRow = random.randint(0,2)
+        randomRow = random.randint(0, c.numSensorNeurons - 1)
+        #randomColumn = random.randint(0,1)
+        randomColumn = random.randint(0, c.numMotorNeurons - 1)
+
         self.weights[randomRow, randomColumn] = random.random()*2-1
