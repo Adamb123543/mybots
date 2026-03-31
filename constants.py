@@ -22,12 +22,20 @@ BackLegTargetAngles = np.linspace(-np.pi, np.pi, simulationCycles)
 backLegSensorValues = np.zeros(simulationCycles) #for storing sensor data
 frontLegSensorValues = np.zeros(simulationCycles) #for storing sensor data
 
-numberOfGenerations = 1
+LeftLegTargetAngles = np.linspace(-np.pi, np.pi, simulationCycles)
+RightLegTargetAngles = np.linspace(-np.pi, np.pi, simulationCycles)
 
-populationSize = 1
+LeftLegSensorValues = np.zeros(simulationCycles) #for storing sensor data
+RightLegSensorValues = np.zeros(simulationCycles) #for storing sensor data
 
-numSensorNeurons = 3
-numMotorNeurons = 2
+numberOfGenerations = 15
+
+populationSize = 10
+
+numSensorNeurons = 4
+numMotorNeurons = 8
+
+motorJointRange = 0.2
 
 for i in range(simulationCycles):
     FrontLegTargetAngles[i] = FrontLegAmplitude*(-np.sin(FrontLegFrequency*FrontLegTargetAngles[i]+FrontLegPhaseOffset))
