@@ -50,13 +50,17 @@ class ROBOT:
         #self.nn.Print()
 
     def Get_Fitness(self):
-        stateOfLinkZero = p.getLinkState(self.robotId,0)
-        positionofLinkZero = stateOfLinkZero[0]
-        xCoordinateOfLinkZero = positionofLinkZero[0]
+        #stateOfLinkZero = p.getLinkState(self.robotId,0)
+        #positionofLinkZero = stateOfLinkZero[0]
+        #xCoordinateOfLinkZero = positionofLinkZero[0]
+
+        basePositionAndOrientation = p.getBasePositionAndOrientation(self.robotId)
+        basePosition = basePositionAndOrientation[0]
+        xPosition = basePosition[0]
         #print(xCoordinateOfLinkZero)
 
         with open(f"tmp{self.solutionID}.txt", "w") as f:
-            f.write(str(xCoordinateOfLinkZero))
+            f.write(str(xPosition))
         if os.path.exists(f"fitness{self.solutionID}.txt"):
             os.remove(f"fitness{self.solutionID}.txt")
         os.rename(f"tmp{self.solutionID}.txt", f"fitness{self.solutionID}.txt")
