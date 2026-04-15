@@ -13,12 +13,13 @@ class ROBOT:
     def __init__(self, solutionID):
         self.motors = {}
         self.solutionID = solutionID
-        self.robotId = p.loadURDF("body.urdf")  # adds floor plane
+        self.robotId = p.loadURDF(f"body{solutionID}.urdf")  # adds floor plane
         pyrosim.Prepare_To_Simulate(self.robotId)  # additional setup for sensors with Pyrosim
         self.Prepare_To_Sense()
         self.Prepare_To_Act()
         self.nn = NEURAL_NETWORK(f"brain{solutionID}.nndf")
         os.system(f'del brain{self.solutionID}.nndf')
+        os.system(f'del body{self.solutionID}.nndf')
 
     def Prepare_To_Sense(self):
         self.sensors = {}

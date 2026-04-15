@@ -14,12 +14,13 @@ x = -2
 y = 2
 z = 0.5
 
+Max_Mutation = 0.2 #percentage a child's limb can be different than the parents
 
 class SOLUTION():
     def __init__(self, myID):
         self.myID = myID
         self.weights = np.random.rand(c.numSensorNeurons, c.numMotorNeurons)
-        '''
+
         self.weights = self.weights*2-1
         self.frontLegSize = [0.2,2,0.2]
         self.backLegSize = [0.2,2,0.2]
@@ -29,7 +30,7 @@ class SOLUTION():
         self.frontLowerLegSize = [0.2,0.2,1.5]
         self.rightLowerLegSize = [0.2,0.2,2]
         self.leftLowerLegSize = [0.2,0.2,2.5]
-'''
+        '''
         self.frontLegSize = [random.uniform(0.1, 1), random.uniform(0.1, 2), random.uniform(0.1, 1)]
         self.backLegSize = [random.uniform(0.1, 1), random.uniform(0.1, 2), random.uniform(0.1, 1)]
         self.leftLegSize = [random.uniform(0.1, 2), random.uniform(0.1, 1), random.uniform(0.1, 1)]
@@ -39,6 +40,8 @@ class SOLUTION():
         self.rightLowerLegSize = [random.uniform(0.1, 1), random.uniform(0.1, 1), random.uniform(0.1, 2)]
         self.leftLowerLegSize = [random.uniform(0.1, 1), random.uniform(0.1, 1), random.uniform(0.1, 2)]
         #lowerLegSize = [length, width, height
+        '''
+
     def Set_ID(self, myID):
         self.myID = myID
 
@@ -52,7 +55,9 @@ class SOLUTION():
         while not os.path.exists(f"brain{self.myID}.nndf"):
             time.sleep(0.01)
         self.Create_Body()
-        os.system(f"start /B python simulate.py {directOrGUI} {self.myID} 2>nul") #added 2>nul
+        while not os.path.exists(f"body{self.myID}.urdf"):
+            time.sleep(0.01)
+        os.system(f"start /B python simulate.py {directOrGUI} {self.myID} 2>nul")
 
 
     def Wait_For_Simulation_To_End(self):
@@ -69,33 +74,44 @@ class SOLUTION():
         pyrosim.Send_Cube(name="Box", pos=[x, y, z], size=[length, width, height])
         pyrosim.End()
 
-
     def Create_Body(self):
-        pyrosim.Start_URDF("body.urdf")
-        pyrosim.Send_Cube("Torso", [0,0,1], [length, width, height])
-        pyrosim.Send_Joint(name="Torso_BackLeg", parent="Torso", child="BackLeg", type="revolute", position=[0, -0.5, 1], jointAxis = "1 0 0")
-        pyrosim.Send_Cube("BackLeg", [0,-self.backLegSize[1]/2,0], self.backLegSize)
-        pyrosim.Send_Joint(name="Torso_FrontLeg", parent="Torso", child="FrontLeg", type="revolute", position=[0,0.5,1], jointAxis = "1 0 0")
-        pyrosim.Send_Cube("FrontLeg", [0,self.frontLegSize[1]/2,0], self.frontLegSize)
-        pyrosim.Send_Joint(name="Torso_LeftLeg", parent="Torso", child="LeftLeg", type="revolute",position=[-0.5,0,1], jointAxis="0 1 0")
-        pyrosim.Send_Cube("LeftLeg", [-self.leftLegSize[0]/2, 0, 0], self.leftLegSize)
-        pyrosim.Send_Joint(name="Torso_RightLeg", parent="Torso", child="RightLeg", type="revolute", position=[0.5,0,1], jointAxis="0 1 0")
-        pyrosim.Send_Cube("RightLeg", [self.rightLegSize[0]/2, 0, 0], self.rightLegSize)
+        heightComp = 1.5
+        pyrosim.Start_URDF(f"body{self.myID}.urdf")
+        pyrosim.Send_Cube("Torso", [0, 0, 1 + heightComp], [length, width, height])
 
-        pyrosim.Send_Joint(name="Torso_FrontLowerLeg", parent="FrontLeg", child="FrontLowerLeg", type="revolute",position=[0,self.frontLegSize[1],0], jointAxis="1 0 0")
-        pyrosim.Send_Cube("FrontLowerLeg", [0,0,-self.frontLowerLegSize[2]/2], self.frontLowerLegSize)
+        pyrosim.Send_Joint(name="Torso_BackLeg", parent="Torso", child="BackLeg", type="revolute",
+                           position=[0, -0.5, 1 + heightComp], jointAxis="1 0 0")
+        pyrosim.Send_Cube("BackLeg", [0, -self.backLegSize[1] / 2, 0], self.backLegSize)
 
-        pyrosim.Send_Joint(name="Torso_BackLowerLeg", parent="BackLeg", child="BackLowerLeg", type="revolute",position=[0,-self.backLegSize[1],0], jointAxis="1 0 0")
-        pyrosim.Send_Cube("BackLowerLeg", [0,0,-self.backLowerLegSize[2]/2], self.backLowerLegSize)
+        pyrosim.Send_Joint(name="Torso_FrontLeg", parent="Torso", child="FrontLeg", type="revolute",
+                           position=[0, 0.5, 1 + heightComp], jointAxis="1 0 0")
+        pyrosim.Send_Cube("FrontLeg", [0, self.frontLegSize[1] / 2, 0], self.frontLegSize)
 
-        pyrosim.Send_Joint(name="Torso_LeftLowerLeg", parent="LeftLeg", child="LeftLowerLeg", type="revolute",position=[-self.leftLegSize[0]  , 0, 0], jointAxis="0 1 0")
-        pyrosim.Send_Cube("LeftLowerLeg", [0,0,-self.leftLowerLegSize[2]/2], self.leftLowerLegSize)
+        pyrosim.Send_Joint(name="Torso_LeftLeg", parent="Torso", child="LeftLeg", type="revolute",
+                           position=[-0.5, 0, 1 + heightComp], jointAxis="0 1 0")
+        pyrosim.Send_Cube("LeftLeg", [-self.leftLegSize[0] / 2, 0, 0], self.leftLegSize)
 
-        pyrosim.Send_Joint(name="Torso_RightLowerLeg", parent="RightLeg", child="RightLowerLeg", type="revolute",position=[self.rightLegSize[0], 0, 0], jointAxis="0 1 0")
-        pyrosim.Send_Cube("RightLowerLeg", [0,0,-self.rightLowerLegSize[2]/2], self.rightLowerLegSize)
+        pyrosim.Send_Joint(name="Torso_RightLeg", parent="Torso", child="RightLeg", type="revolute",
+                           position=[0.5, 0, 1 + heightComp], jointAxis="0 1 0")
+        pyrosim.Send_Cube("RightLeg", [self.rightLegSize[0] / 2, 0, 0], self.rightLegSize)
+
+        pyrosim.Send_Joint(name="Torso_FrontLowerLeg", parent="FrontLeg", child="FrontLowerLeg", type="revolute",
+                           position=[0, self.frontLegSize[1], 0], jointAxis="1 0 0")
+        pyrosim.Send_Cube("FrontLowerLeg", [0, 0, -self.frontLowerLegSize[2] / 2], self.frontLowerLegSize)
+
+        pyrosim.Send_Joint(name="Torso_BackLowerLeg", parent="BackLeg", child="BackLowerLeg", type="revolute",
+                           position=[0, -self.backLegSize[1], 0], jointAxis="1 0 0")
+        pyrosim.Send_Cube("BackLowerLeg", [0, 0, -self.backLowerLegSize[2] / 2], self.backLowerLegSize)
+
+        pyrosim.Send_Joint(name="Torso_LeftLowerLeg", parent="LeftLeg", child="LeftLowerLeg", type="revolute",
+                           position=[-self.leftLegSize[0], 0, 0], jointAxis="0 1 0")
+        pyrosim.Send_Cube("LeftLowerLeg", [0, 0, -self.leftLowerLegSize[2] / 2], self.leftLowerLegSize)
+
+        pyrosim.Send_Joint(name="Torso_RightLowerLeg", parent="RightLeg", child="RightLowerLeg", type="revolute",
+                           position=[self.rightLegSize[0], 0, 0], jointAxis="0 1 0")
+        pyrosim.Send_Cube("RightLowerLeg", [0, 0, -self.rightLowerLegSize[2] / 2], self.rightLowerLegSize)
 
         pyrosim.End()
-
 
     def Create_Brain(self):
         pyrosim.Start_NeuralNetwork(f"brain{self.myID}.nndf")
@@ -132,11 +148,34 @@ class SOLUTION():
 
         pyrosim.End()
 
-
     def Mutate(self):
-        #randomRow = random.randint(0,2)
-        randomRow = random.randint(0, c.numSensorNeurons - 1)
-        #randomColumn = random.randint(0,1)
-        randomColumn = random.randint(0, c.numMotorNeurons - 1)
 
-        self.weights[randomRow, randomColumn] = random.random()*2-1
+        randomRow = random.randint(0, c.numSensorNeurons - 1)
+        randomColumn = random.randint(0, c.numMotorNeurons - 1)
+        self.weights[randomRow, randomColumn] = random.random() * 2 - 1
+
+        for i in range(3): #front leg
+            self.frontLegSize[i] = max(0.1, min(2.0, self.frontLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+
+        for i in range(3): #back leg
+            self.backLegSize[i] = max(0.1, min(2.0, self.backLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+
+        for i in range(3): #left leg
+            self.leftLegSize[i] = max(0.1, min(2.0, self.leftLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+
+        for i in range(3): #right leg
+            self.rightLegSize[i] = max(0.1, min(2.0, self.rightLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+
+        for i in range(3): #front lower leg
+            self.frontLowerLegSize[i] = max(0.1, min(2.0, self.frontLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+
+        for i in range(3): #back lower leg
+            self.backLowerLegSize[i] = max(0.1, min(2.0, self.backLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+
+        for i in range(3): #left lower leg
+            self.leftLowerLegSize[i] = max(0.1, min(2.0, self.leftLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+
+        for i in range(3): #right lower leg
+            self.rightLowerLegSize[i] = max(0.1, min(2.0, self.rightLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+
+
