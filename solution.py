@@ -27,9 +27,9 @@ class SOLUTION():
         self.leftLegSize = [2, 0.2, 0.2]
         self.rightLegSize = [2, 0.2, 0.2]
         self.backLowerLegSize = [0.2,0.2,1]
-        self.frontLowerLegSize = [0.2,0.2,1.5]
-        self.rightLowerLegSize = [0.2,0.2,2]
-        self.leftLowerLegSize = [0.2,0.2,2.5]
+        self.frontLowerLegSize = [0.2,0.2,1]
+        self.rightLowerLegSize = [0.2,0.2,1]
+        self.leftLowerLegSize = [0.2,0.2,1]
         '''
         self.frontLegSize = [random.uniform(0.1, 1), random.uniform(0.1, 2), random.uniform(0.1, 1)]
         self.backLegSize = [random.uniform(0.1, 1), random.uniform(0.1, 2), random.uniform(0.1, 1)]
@@ -41,6 +41,28 @@ class SOLUTION():
         self.leftLowerLegSize = [random.uniform(0.1, 1), random.uniform(0.1, 1), random.uniform(0.1, 2)]
         #lowerLegSize = [length, width, height
         '''
+
+    def Save_Leg_Values(self, filename = "best_robot"):
+        np.save(f"{filename}_weights.npy", self.weights)
+        np.save(f"{filename}_frontLeg.npy", self.frontLegSize)
+        np.save(f"{filename}_backLeg.npy", self.backLegSize)
+        np.save(f"{filename}_leftLeg.npy", self.leftLegSize)
+        np.save(f"{filename}_rightLeg.npy", self.rightLegSize)
+        np.save(f"{filename}_frontLowerLeg.npy", self.frontLowerLegSize)
+        np.save(f"{filename}_backLowerLeg.npy", self.backLowerLegSize)
+        np.save(f"{filename}_leftLowerLeg.npy", self.leftLowerLegSize)
+        np.save(f"{filename}_rightLowerLeg.npy", self.rightLowerLegSize)
+
+    def Load_Leg_Values(self, filename = "best_robot"):
+        self.weights = np.load(f"{filename}_weights.npy")
+        self.frontLegSize = list(np.load(f"{filename}_frontLeg.npy"))
+        self.backLegSize = list(np.load(f"{filename}_backLeg.npy"))
+        self.leftLegSize = list(np.load(f"{filename}_leftLeg.npy"))
+        self.rightLegSize = list(np.load(f"{filename}_rightLeg.npy"))
+        self.frontLowerLegSize = list(np.load(f"{filename}_frontLowerLeg.npy"))
+        self.backLowerLegSize = list(np.load(f"{filename}_backLowerLeg.npy"))
+        self.leftLowerLegSize = list(np.load(f"{filename}_leftLowerLeg.npy"))
+        self.rightLowerLegSize = list(np.load(f"{filename}_rightLowerLeg.npy"))
 
     def Set_ID(self, myID):
         self.myID = myID
@@ -63,7 +85,13 @@ class SOLUTION():
     def Wait_For_Simulation_To_End(self):
         while not os.path.exists(f"fitness{str(self.myID)}.txt"):
             time.sleep(0.01)
-        fitnessFile = open(f"fitness{str(self.myID)}.txt", "r")
+
+        fitnessFile = None
+        while fitnessFile is None:
+            try:
+                fitnessFile = open(f"fitness{str(self.myID)}.txt", "r")
+            except PermissionError:
+                time.sleep(0.01)
         self.fitness = float(fitnessFile.read())
         #print(self.fitness)
         fitnessFile.close()
@@ -149,33 +177,34 @@ class SOLUTION():
         pyrosim.End()
 
     def Mutate(self):
-
+        minimum = 0.1
+        maximum = 4
         randomRow = random.randint(0, c.numSensorNeurons - 1)
         randomColumn = random.randint(0, c.numMotorNeurons - 1)
         self.weights[randomRow, randomColumn] = random.random() * 2 - 1
 
         for i in range(3): #front leg
-            self.frontLegSize[i] = max(0.1, min(2.0, self.frontLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+            self.frontLegSize[i] = max(minimum, min(maximum, self.frontLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
 
         for i in range(3): #back leg
-            self.backLegSize[i] = max(0.1, min(2.0, self.backLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+            self.backLegSize[i] = max(minimum, min(maximum, self.backLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
 
         for i in range(3): #left leg
-            self.leftLegSize[i] = max(0.1, min(2.0, self.leftLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+            self.leftLegSize[i] = max(minimum, min(maximum, self.leftLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
 
         for i in range(3): #right leg
-            self.rightLegSize[i] = max(0.1, min(2.0, self.rightLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+            self.rightLegSize[i] = max(minimum, min(maximum, self.rightLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
 
         for i in range(3): #front lower leg
-            self.frontLowerLegSize[i] = max(0.1, min(2.0, self.frontLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+            self.frontLowerLegSize[i] = max(minimum, min(maximum, self.frontLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
 
         for i in range(3): #back lower leg
-            self.backLowerLegSize[i] = max(0.1, min(2.0, self.backLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+            self.backLowerLegSize[i] = max(minimum, min(maximum, self.backLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
 
         for i in range(3): #left lower leg
-            self.leftLowerLegSize[i] = max(0.1, min(2.0, self.leftLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+            self.leftLowerLegSize[i] = max(minimum, min(maximum, self.leftLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
 
         for i in range(3): #right lower leg
-            self.rightLowerLegSize[i] = max(0.1, min(2.0, self.rightLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+            self.rightLowerLegSize[i] = max(minimum, min(maximum, self.rightLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
 
 

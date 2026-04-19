@@ -17,13 +17,15 @@ class PARALLEL_HILL_CLIMBER():
 
         #self.parent.Evaluate('DIRECT')
         self.Evaluate(self.parents)
+        bestInitialKey = max(self.parents, key=lambda i: self.parents[i].fitness)
+        self.initialBest = copy.deepcopy(self.parents[bestInitialKey])
         for currentGeneration in range(constants.numberOfGenerations):
             self.Evolve_For_One_Generation()
 
     def Evolve_For_One_Generation(self):
         self.Spawn()
         self.Mutate()
-        self.Evaluate(self.children, "GUI")
+        self.Evaluate(self.children, "DIRECT")
         self.Print()
         self.Select()
 
@@ -57,8 +59,16 @@ class PARALLEL_HILL_CLIMBER():
 
     def Show_Best(self):
         #self.parent.Evaluate("GUI")
+
+        print('First Robot Showing')
+        self.initialBest.Evaluate("GUI")
+        print('Final Evolved Robot Showing')
         leastFit = min(self.parents, key = lambda i: self.parents[i].fitness)
+        best_robot = self.parents[leastFit]
+        best_robot.Save_Leg_Values('best_robot')
         self.parents[leastFit].Start_Simulation("GUI")
+
+
 
     def Evaluate(self, solutions, directOrGUI = "DIRECT"):
         for i in solutions:
