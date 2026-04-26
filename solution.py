@@ -185,26 +185,18 @@ class SOLUTION():
 
         for i in range(3): #front leg
             self.frontLegSize[i] = max(minimum, min(maximum, self.frontLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
-
-        for i in range(3): #back leg
-            self.backLegSize[i] = max(minimum, min(maximum, self.backLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+            self.backLegSize[i] = self.frontLegSize[i]
 
         for i in range(3): #left leg
             self.leftLegSize[i] = max(minimum, min(maximum, self.leftLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
-
-        for i in range(3): #right leg
-            self.rightLegSize[i] = max(minimum, min(maximum, self.rightLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+            self.rightLegSize[i] = self.leftLegSize[i]
 
         for i in range(3): #front lower leg
             self.frontLowerLegSize[i] = max(minimum, min(maximum, self.frontLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
-
-        for i in range(3): #back lower leg
-            self.backLowerLegSize[i] = max(minimum, min(maximum, self.backLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+            self.backLowerLegSize[i] = self.frontLowerLegSize[i]
 
         for i in range(3): #left lower leg
             self.leftLowerLegSize[i] = max(minimum, min(maximum, self.leftLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
-
-        for i in range(3): #right lower leg
-            self.rightLowerLegSize[i] = max(minimum, min(maximum, self.rightLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+            self.rightLowerLegSize[i] = self.leftLowerLegSize[i]
 
 
