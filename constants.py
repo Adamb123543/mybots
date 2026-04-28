@@ -28,9 +28,9 @@ RightLegTargetAngles = np.linspace(-np.pi, np.pi, simulationCycles)
 LeftLegSensorValues = np.zeros(simulationCycles) #for storing sensor data
 RightLegSensorValues = np.zeros(simulationCycles) #for storing sensor data
 
-numberOfGenerations = 10
+numberOfGenerations = 150
 
-populationSize = 5
+populationSize = 15
 
 numSensorNeurons = 4
 numMotorNeurons = 8
