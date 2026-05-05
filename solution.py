@@ -176,7 +176,7 @@ class SOLUTION():
 
         pyrosim.End()
 
-    def Mutate(self):
+    def Mutate_Symmetric(self):
         minimum = 0.1
         maximum = 4
         randomRow = random.randint(0, c.numSensorNeurons - 1)
@@ -200,3 +200,29 @@ class SOLUTION():
             self.rightLowerLegSize[i] = self.leftLowerLegSize[i]
 
 
+    def Mutate_Unsymmetric(self):
+        minimum = 0.1
+        maximum = 4
+        randomRow = random.randint(0, c.numSensorNeurons - 1)
+        randomColumn = random.randint(0, c.numMotorNeurons - 1)
+        self.weights[randomRow, randomColumn] = random.random() * 2 - 1
+
+        for i in range(3): #front leg
+            self.frontLegSize[i] = max(minimum, min(maximum, self.frontLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+        for i in range(3): #back leg
+            self.backLegSize[i] = max(minimum, min(maximum, self.backLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+
+        for i in range(3): #left leg
+            self.leftLegSize[i] = max(minimum, min(maximum, self.leftLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+        for i in range(3): #right leg
+            self.rightLegSize[i] = max(minimum, min(maximum, self.rightLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+
+        for i in range(3): #front lower leg
+            self.frontLowerLegSize[i] = max(minimum, min(maximum, self.frontLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+        for i in range(3): #back lower leg
+            self.backLowerLegSize[i] = max(minimum, min(maximum, self.backLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+
+        for i in range(3): #left lower leg
+            self.leftLowerLegSize[i] = max(minimum, min(maximum, self.leftLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))
+        for i in range(3): #right lower leg
+            self.rightLowerLegSize[i] = max(minimum, min(maximum, self.rightLowerLegSize[i] + random.uniform(-Max_Mutation, Max_Mutation)))

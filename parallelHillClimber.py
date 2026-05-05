@@ -2,6 +2,7 @@ import constants
 import copy
 from solution import *
 import constants as c
+import numpy as np
 class PARALLEL_HILL_CLIMBER():
     def __init__(self):
         os.system("del brain*.nndf")
@@ -13,21 +14,28 @@ class PARALLEL_HILL_CLIMBER():
             self.parents[i] = SOLUTION(self.nextAvailableID)
             self.nextAvailableID += 1
         self.parent = self.parents[0]
-    def Evolve(self):
+    def Evolve(self,symmetric):
+        self.fitnessOverTime = [] #for data storage
 
         #self.parent.Evaluate('DIRECT')
         self.Evaluate(self.parents)
         bestInitialKey = max(self.parents, key=lambda i: self.parents[i].fitness)
         self.initialBest = copy.deepcopy(self.parents[bestInitialKey])
         for currentGeneration in range(constants.numberOfGenerations):
-            self.Evolve_For_One_Generation()
+            print(f"Generation {currentGeneration + 1} of {constants.numberOfGenerations}")  # <-- here
+            self.Evolve_For_One_Generation(symmetric)
 
-    def Evolve_For_One_Generation(self):
+    def Evolve_For_One_Generation(self, symmetric):
         self.Spawn()
-        self.Mutate()
+        self.Mutate(symmetric)
         self.Evaluate(self.children, "DIRECT")
         self.Print()
         self.Select()
+        bestFitness = min(self.parents[i].fitness for i in self.parents) #for data storage
+        self.fitnessOverTime.append(-bestFitness)
+
+    def Save_Fitness(self,filename): #for data storage
+        np.save(f"{filename}.npy",np.array(self.fitnessOverTime))
 
     def Spawn(self):
         self.children = {}  # ADDED: empty dictionary
@@ -40,9 +48,12 @@ class PARALLEL_HILL_CLIMBER():
 
 
 
-    def Mutate(self):
+    def Mutate(self,symmetric = True ):
         for i in self.children:
-            self.children[i].Mutate()
+            if symmetric == True:
+                self.children[i].Mutate_Symmetric()
+            else:
+                self.children[i].Mutate_Unsymmetric()
 
 
     def Select(self):
