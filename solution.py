@@ -43,6 +43,10 @@ class SOLUTION():
         '''
 
     def Save_Leg_Values(self, filename = "best_robot"):
+        folder = os.path.dirname(filename)
+        if folder:  # only call makedirs if there's actually a folder in the path
+            os.makedirs(folder, exist_ok=True)
+
         np.save(f"{filename}_weights.npy", self.weights)
         np.save(f"{filename}_frontLeg.npy", self.frontLegSize)
         np.save(f"{filename}_backLeg.npy", self.backLegSize)

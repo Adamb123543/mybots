@@ -79,6 +79,9 @@ class PARALLEL_HILL_CLIMBER():
         best_robot.Save_Leg_Values('best_robot')
         self.parents[leastFit].Start_Simulation("GUI")
 
+    def Save_Best(self, filename):
+        bestKey = min(self.parents, key = lambda i: self.parents[i].fitness)
+        self.parents[bestKey].Save_Leg_Values(filename)
 
 
     def Evaluate(self, solutions, directOrGUI = "DIRECT"):

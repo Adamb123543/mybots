@@ -1,33 +1,33 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-
-def Plot_Fitness(filePrefix, numTrials, label, color):
+import os
+print("Files in data/:")
+print(os.listdir("data"))
+def Plot_Fitness(filePrefix, label, color):
     allTrials = []
-    for i in range(numTrials):
+    i = 0
+    while os.path.exists(f"{filePrefix}{i}.npy"):
         data = np.load(f"{filePrefix}{i}.npy")
         allTrials.append(data)
+        i += 1
 
+    if not allTrials:
+        print(f"No files found for {label}")
+        return
+
+    print(f"Loaded {len(allTrials)} trials for {label}")
     allTrials = np.array(allTrials)
     generations = np.arange(allTrials.shape[1])
-
-    finalFitnesses = allTrials[:, -1]
-    ranks = np.argsort(np.argsort(finalFitnesses))
-    colormap = cm.get_cmap("coolwarm")
-
-    for i, trial in enumerate(allTrials):
-        c = colormap(ranks[i] / (numTrials - 1))
-        plt.plot(generations, trial, color=c, alpha=0.3, linewidth=1)
-
     mean = allTrials.mean(axis=0)
-    plt.plot(generations, mean, label=label, color=color, linewidth=2.5)
+    std = allTrials.std(axis=0)
 
-num_trials = 10
+    plt.plot(generations, mean, label=f"{label} (n={len(allTrials)})", color=color, linewidth=2)
+    plt.fill_between(generations, mean - std, mean + std, color=color, alpha=0.2)
 
 plt.figure(figsize=(12, 6))
 
-Plot_Fitness("symmetric_trial", num_trials, "Symmetric (mean)", "blue")
-Plot_Fitness("unsymmetric_trial", num_trials, "Unsymmetric (mean)", "red")
+Plot_Fitness("data/symmetric_trial", "Symmetric", "blue")
+Plot_Fitness("data/unsymmetric_trial", "Unsymmetric", "red")
 
 plt.xlabel("Generation")
 plt.ylabel("Best Fitness")

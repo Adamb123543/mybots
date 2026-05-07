@@ -12,7 +12,7 @@ torque = 100
 
 gravity = -9.8
 
-simulationCycles = 400
+simulationCycles = 5000 #400
 
 cycleTimeSleep = 1/60 #originally 1/60
 
@@ -28,7 +28,7 @@ RightLegTargetAngles = np.linspace(-np.pi, np.pi, simulationCycles)
 LeftLegSensorValues = np.zeros(simulationCycles) #for storing sensor data
 RightLegSensorValues = np.zeros(simulationCycles) #for storing sensor data
 
-numberOfGenerations = 100
+numberOfGenerations = 50
 
 populationSize = 15
 
